@@ -11,13 +11,13 @@ export const registerUser  = async (username, password) => {
     }
 
     // Hash the password before saving
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    // const newUser  = new User({ username, password: hashedPassword });
-    // await newUser .save();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser  = new User({ username, password: hashedPassword });
+    await newUser .save();
 
     // Create a new user
-    const newUser  = new User({ username, password }); // Make sure to hash the password before saving
-    await newUser .save();
+    // const newUser  = new User({ username, password }); // Make sure to hash the password before saving
+    // await newUser .save();
 
     return newUser ;
 };
@@ -31,15 +31,15 @@ export const loginUser  = async (username, password) => {
     }
 
     // Check password (compare hashed password)
-    // const isMatch = await bcrypt.compare(password, user.password);
-    // if (!isMatch) {
-    //     throw new Error('Invalid credentials');
-    // }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error('Invalid credentials');
+    }
 
     // Check password (make sure to compare hashed passwords)
-    if (user.password !== password) { // Use a hashing function in a real app
-        return res.status(400).json({ message: 'Invalid credentials' });
-    }
+    // if (user.password !== password) { // Use a hashing function in a real app
+    //     return res.status(400).json({ message: 'Invalid credentials' });
+    // }
 
     return user; // Return the user object (or any other relevant info)
 };
