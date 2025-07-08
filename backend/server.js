@@ -3,6 +3,7 @@ import { connect } from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
 import morgan from 'morgan';
+import { errorHandler } from './middleware/errorHandler.js';
      
 // Import routes
 import userRoutes from './routes/userRoutes.js';
@@ -35,6 +36,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/greenscore', greenScoreRoutes);
 app.use('/api/privacy', privacyRoutes);
 app.use('/api/rewards', rewardsRoutes);
+app.use(errorHandler);
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
