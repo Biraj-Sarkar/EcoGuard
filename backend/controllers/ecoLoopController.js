@@ -1,4 +1,5 @@
 import * as ecoLoopService from '../services/ecoLoopService.js';
+import mapsService from '../services/mapsService.js'; // Import mapsService
 
 // Get all return options
 export const getReturnOptions = async (req, res) => {
@@ -44,5 +45,17 @@ export const deleteReturnOption = async (req, res) => {
         res.json({ message: 'Return option deleted successfully', deletedOption });
     } catch (error) {
         res.status(error.message === 'Return option not found' ? 404 : 400).json({ message: error.message });
+    }
+};
+
+// New method to schedule pickup
+export const schedulePickup = async (req, res) => {
+    const { pickupLocations } = req.body; // Expecting an array of {latitude, longitude}
+    try {
+        const route = await mapsService.getOptimizedPickupRoute(pickupLocations);
+        const embedMap = mapsService.generateEmbedMap(pickupLocations);
+        res.status(200).json({ route, embedMap });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

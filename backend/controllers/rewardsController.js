@@ -1,4 +1,5 @@
 import * as rewardsService from '../services/rewardsService.js';
+import blockchainService from '../services/blockchainService.js'; // Import blockchainService
 
 // Get rewards for a user
 export const getRewards = async (req, res) => {
@@ -35,5 +36,26 @@ export const redeemRewards = async (req, res) => {
         res.json(rewards);
     } catch (error) {
         res.status(error.message === 'Insufficient points for redemption' ? 400 : 500).json({ message: error.message });
+    }
+};
+
+// New method to log CO₂ reduction
+export const logEmissionReduction = async (req, res) => {
+    const { userId, co2Amount, activityType } = req.body;
+    try {
+        const txHash = await blockchainService.logCO2Reduction(userId, co2Amount, activityType);
+        res.status(200).json({ txHash });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+// New method to get total CO₂ saved by user
+export const getUserCO2Saved = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const totalSaved = await blockchainService.getUserCO2Saved(userId);
+        res.json({ totalSaved });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
